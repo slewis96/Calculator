@@ -57,6 +57,7 @@ function disableOps(bool){
   for (var i = 0; i < opButtons.length; i++) {
     opButtons[i].disabled = bool;
   }
+  opButtons[2].disabled = false;
 }
   //add events to array of elements
     //btns: array of elements
