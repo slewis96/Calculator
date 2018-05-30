@@ -1,90 +1,69 @@
-//sum
-var sum = [];
-//elements
-var numButtons = document.getElementsByClassName('buttonNum');
-var opButtons = document.getElementsByClassName('operator');
+//GLOBAL VARIABLES
+var sum = "";
+
+//ELEMENTS
 var clearButton = document.getElementsByClassName('buttonClear')[0];
 var equalButton = document.getElementsByClassName('equals')[0];
+var numButtons = document.getElementsByClassName('buttonNum');
+var opButtons = document.getElementsByClassName('operator');
 var sumScreen = document.getElementById('screen');
-//events
-function addEvent(btns, funcname){
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].addEventListener('click', funcname);
-  }
-}
+
+//EVENTS
 clearButton.addEventListener('click', clear);
 equalButton.addEventListener('click', calculate);
-addEvent(numButtons, numIn);
-addEvent(opButtons, opIn);
+addEvent(numButtons, "click", numIn);
+addEvent(opButtons, "click", opIn);
 
-//enter number
+//FUNCTIONS
+  //enter number
 function numIn(){
-  sum.push(this.innerHTML);
+  sum += this.innerHTML;
+  disableOps(false);
   refreshScreen(sum);
 }
-//enter operator
+  //enter operator
 function opIn(){
   if(sum.length<1){
-    alert("Enter a number before")
-  } else {
-    sum.push(" ");
-    sum.push(this.innerHTML);
-    sum.push(" ");
+    if(this.innerHTML=="-"){
+      sum += this.innerHTML;
+      refreshScreen(sum);
+      disableOps(true);
+    }
+  }
+  else {
+    sum += " "+this.innerHTML+" ";
+    disableOps(true);
     refreshScreen(sum);
   }
 }
-//clear screen
+  //clear screen
 function clear(){
-  sum = [];
+  sum = "";
   refreshScreen(sum);
 }
-//set screen
+  //set screen
+    //value: string to be diplayed
 function refreshScreen(value){
-  sumScreen.innerHTML = value.join('');
+  sumScreen.innerHTML = value;
 }
-//calculate sum
+  //calculate sum
 function calculate(){
-  sumStr = sum.join('');
-  var sumArr = sumStr.split(" ");
-  var lastEle = sumArr[sumArr.length-1];
-  if(lastEle==""){
-    alert("invalid input");
-  }
-  else{
-    refreshScreen(completeSum(sumArr, 0));
+  sum = eval(sum);
+  refreshScreen(sum);
+}
+  //set whether operator buttons are disabled
+    //bool: true to disable, false to able
+function disableOps(bool){
+  for (var i = 0; i < opButtons.length; i++) {
+    opButtons[i].disabled = bool;
   }
 }
-function completeSum(sumArr, startindex){
-  var num1 = 0;
-  var op = "";
-  var num2 = 0;
-  var result = 0;
-  var i;
-  for (i = startindex; i < 2; i++) {
-    if(isNaN(parseInt(sumArr[i]))){
-      parseInt(num1);
-      op = sumArr[i];
-      alert("op: " + op);
-    }
-    else{
-      num1 = sumArr[i];
-      alert("num1: " + num1);
-    }
+  //add events to array of elements
+    //btns: array of elements
+    //type: type of event
+    //funcname: name of function to be called on event
+function addEvent(btns, type, funcname){
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].addEventListener(type, funcname);
   }
-  num2 = sumArr[i];
-  alert("num2: " + num2);
-  if(op=="*"){
-    result = parseInt(num1) * parseInt(num2);
-  }
-  if(op=="/"){
-    result = parseInt(num1) / parseInt(num2);
-  }
-  if(op=="-"){
-    result = parseInt(num1) - parseInt(num2);
-  }
-  if(op=="+"){
-    result = parseInt(num1) + parseInt(num2);
-  }
-  alert(result);
-  return result;
 }
